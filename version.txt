@@ -1,2 +1,2 @@
-1.2.0.0
-https://github.com/Ironalien678/MusicPlayer/releases/download/v1.2/MusicPlayerInstaller.exe
+1.3.0.0
+https://github.com/Ironalien678/MusicPlayer/releases/download/v1.3/MusicPlayerInstaller.exe
