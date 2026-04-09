@@ -109,6 +109,50 @@ namespace MusicPlayer
             }
         }
 
+        private void uninstallToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var result = MessageBox.Show("This will uninstall Music Player. Continue?", "Uninstall", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result != DialogResult.Yes) return;
+
+                // Attempt to run the uninstaller from the install folder if present
+                var exePath = System.IO.Path.Combine(Application.StartupPath, "MusicPlayer.exe");
+                // If ClickOnce/Publish uninstall scenario, try to launch the uninstaller via msiexec or ClickOnce uninstall is handled differently.
+                // We'll try to find an uninstaller in the same folder named "uninstall.exe" or use "MusicPlayer.exe /uninstall" if available.
+
+                var uninstallCandidates = new[] {
+                    System.IO.Path.Combine(Application.StartupPath, "uninstall.exe"),
+                    System.IO.Path.Combine(Application.StartupPath, "unins000.exe"),
+                    exePath
+                };
+
+                foreach (var c in uninstallCandidates)
+                {
+                    if (System.IO.File.Exists(c))
+                    {
+                        try
+                        {
+                            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo { FileName = c, UseShellExecute = true });
+                            return;
+                        }
+                        catch { }
+                    }
+                }
+
+                // If no uninstaller found, open Control Panel Programs & Features
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "appwiz.cpl",
+                    UseShellExecute = true
+                });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Uninstall failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void lstPlaylist_DoubleClick(object sender, EventArgs e)
         {
             if (lstPlaylist.SelectedIndex >= 0) PlayAt(lstPlaylist.SelectedIndex);

@@ -24,7 +24,16 @@ namespace MusicPlayer
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            try
+            {
+                Application.Run(new Form1());
+            }
+            catch (Exception ex)
+            {
+                // Show unhandled exceptions during startup so the cause is visible
+                try { MessageBox.Show("Unhandled error starting application:\n" + ex.ToString(), "Startup Error", MessageBoxButtons.OK, MessageBoxIcon.Error); } catch { }
+                throw;
+            }
         }
     }
 }
