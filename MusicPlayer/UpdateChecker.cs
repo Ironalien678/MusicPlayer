@@ -21,7 +21,7 @@ namespace MusicPlayer
         //    Properties\AssemblyInfo.cs AND update the hosted version.txt.
         // ---------------------------------------------------------------
 
-        private const string VersionUrl = "https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/version.txt";
+        private const string VersionUrl = "https://raw.githubusercontent.com/Ironalien678/MusicPlayer/master/version.txt";
 
         /// <summary>
         /// Check for updates. If silent is true, only show a message when an update is available.
