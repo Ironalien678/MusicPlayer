@@ -28,6 +28,9 @@ namespace MusicPlayer
         private Random rng = new Random();
         private static readonly string SaveDir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MusicPlayer");
         private static readonly string SaveFile = System.IO.Path.Combine(SaveDir, "session.dat");
+        private static readonly string PlaylistFoldersDir = System.IO.Path.Combine(SaveDir, "Playlists");
+        private Dictionary<string, List<string>> playlistFolders = new Dictionary<string, List<string>>();
+        private string activeFolder = null;
 
         public Form1()
         {
@@ -50,6 +53,8 @@ namespace MusicPlayer
 
             // restore previous session
             LoadSession();
+            LoadPlaylistFolders();
+            RefreshFolderTree();
 
             // check for updates silently on startup
             System.Threading.Tasks.Task.Run(() =>
@@ -767,6 +772,54 @@ namespace MusicPlayer
             else if (currentIndex == idx + 1) currentIndex--;
         }
 
+        // --- Context menu: Add to Playlist folder ---
+        private void addToPlaylistToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (lstPlaylist.SelectedIndex < 0) return;
+            var selectedName = lstPlaylist.Items[lstPlaylist.SelectedIndex].ToString();
+            int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
+            if (realIdx < 0) return;
+            var trackPath = playlist[realIdx];
+
+            if (playlistFolders.Count == 0)
+            {
+                MessageBox.Show("No playlists yet. Right-click the Playlists panel to create one.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // let user pick which folder
+            var folderNames = playlistFolders.Keys.OrderBy(x => x).ToArray();
+            var form = new Form();
+            form.Text = "Add to Playlist";
+            form.ClientSize = new Size(300, 130);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.MaximizeBox = false;
+            form.MinimizeBox = false;
+
+            var lbl = new Label() { Text = "Select playlist:", Left = 10, Top = 12, AutoSize = true };
+            var combo = new ComboBox() { Left = 10, Top = 38, Width = 270, DropDownStyle = ComboBoxStyle.DropDownList };
+            combo.Items.AddRange(folderNames);
+            combo.SelectedIndex = 0;
+            var btnOk = new Button() { Text = "Add", Left = 120, Top = 80, Width = 75, DialogResult = DialogResult.OK };
+            var btnCancel = new Button() { Text = "Cancel", Left = 205, Top = 80, Width = 75, DialogResult = DialogResult.Cancel };
+
+            form.Controls.AddRange(new Control[] { lbl, combo, btnOk, btnCancel });
+            form.AcceptButton = btnOk;
+            form.CancelButton = btnCancel;
+
+            if (form.ShowDialog() == DialogResult.OK && combo.SelectedItem != null)
+            {
+                var folder = combo.SelectedItem.ToString();
+                if (!playlistFolders[folder].Contains(trackPath))
+                {
+                    playlistFolders[folder].Add(trackPath);
+                    SavePlaylistFolders();
+                    RefreshFolderTree();
+                }
+            }
+        }
+
         // --- Keyboard shortcuts ---
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
@@ -906,8 +959,173 @@ namespace MusicPlayer
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             SaveSession();
+            SavePlaylistFolders();
             try { if (wmp != null) wmp.controls.stop(); } catch { }
             base.OnFormClosing(e);
+        }
+
+        // ===================== Playlist Folders =====================
+
+        private void RefreshFolderTree()
+        {
+            treePlaylistFolders.Nodes.Clear();
+
+            // "All Music" node always first
+            var allNode = treePlaylistFolders.Nodes.Add("__ALL__", "♫ All Music");
+            allNode.Tag = "__ALL__";
+
+            foreach (var kv in playlistFolders.OrderBy(x => x.Key))
+            {
+                var node = treePlaylistFolders.Nodes.Add(kv.Key, "📁 " + kv.Key + " (" + kv.Value.Count + ")");
+                node.Tag = kv.Key;
+            }
+
+            // select All Music by default
+            if (activeFolder == null)
+                treePlaylistFolders.SelectedNode = allNode;
+        }
+
+        private void treePlaylistFolders_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node == null || e.Node.Tag == null) return;
+            var key = e.Node.Tag.ToString();
+
+            if (key == "__ALL__")
+            {
+                activeFolder = null;
+                // show all tracks from session
+                // don't change playlist - just leave it as is
+                return;
+            }
+
+            activeFolder = key;
+            if (!playlistFolders.ContainsKey(key)) return;
+
+            // load this folder's tracks into the main playlist
+            playlist.Clear();
+            lstPlaylist.Items.Clear();
+            currentIndex = -1;
+
+            foreach (var path in playlistFolders[key])
+            {
+                if (System.IO.File.Exists(path))
+                {
+                    playlist.Add(path);
+                    lstPlaylist.Items.Add(System.IO.Path.GetFileName(path));
+                }
+            }
+            UpdateStatusBar();
+        }
+
+        private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var name = PromptInput("New Playlist", "Enter playlist name:");
+            if (string.IsNullOrWhiteSpace(name)) return;
+            name = name.Trim();
+            if (playlistFolders.ContainsKey(name))
+            {
+                MessageBox.Show("A playlist with that name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            playlistFolders[name] = new List<string>();
+            SavePlaylistFolders();
+            RefreshFolderTree();
+        }
+
+        private void renameFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = treePlaylistFolders.SelectedNode;
+            if (node == null || node.Tag == null || node.Tag.ToString() == "__ALL__") return;
+            var oldName = node.Tag.ToString();
+            var newName = PromptInput("Rename Playlist", "New name:", oldName);
+            if (string.IsNullOrWhiteSpace(newName) || newName.Trim() == oldName) return;
+            newName = newName.Trim();
+            if (playlistFolders.ContainsKey(newName))
+            {
+                MessageBox.Show("A playlist with that name already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            var tracks = playlistFolders[oldName];
+            playlistFolders.Remove(oldName);
+            playlistFolders[newName] = tracks;
+            if (activeFolder == oldName) activeFolder = newName;
+            SavePlaylistFolders();
+            RefreshFolderTree();
+        }
+
+        private void deleteFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var node = treePlaylistFolders.SelectedNode;
+            if (node == null || node.Tag == null || node.Tag.ToString() == "__ALL__") return;
+            var name = node.Tag.ToString();
+            var result = MessageBox.Show("Delete playlist \"" + name + "\"?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes) return;
+            playlistFolders.Remove(name);
+            if (activeFolder == name) activeFolder = null;
+            SavePlaylistFolders();
+            RefreshFolderTree();
+        }
+
+        private void SavePlaylistFolders()
+        {
+            try
+            {
+                if (!System.IO.Directory.Exists(PlaylistFoldersDir))
+                    System.IO.Directory.CreateDirectory(PlaylistFoldersDir);
+
+                // clean out old files
+                foreach (var f in System.IO.Directory.GetFiles(PlaylistFoldersDir, "*.m3u"))
+                    System.IO.File.Delete(f);
+
+                foreach (var kv in playlistFolders)
+                {
+                    var safeName = string.Join("_", kv.Key.Split(System.IO.Path.GetInvalidFileNameChars()));
+                    var path = System.IO.Path.Combine(PlaylistFoldersDir, safeName + ".m3u");
+                    System.IO.File.WriteAllLines(path, kv.Value);
+                }
+            }
+            catch { }
+        }
+
+        private void LoadPlaylistFolders()
+        {
+            playlistFolders.Clear();
+            try
+            {
+                if (!System.IO.Directory.Exists(PlaylistFoldersDir)) return;
+                foreach (var f in System.IO.Directory.GetFiles(PlaylistFoldersDir, "*.m3u"))
+                {
+                    var name = System.IO.Path.GetFileNameWithoutExtension(f);
+                    var tracks = System.IO.File.ReadAllLines(f)
+                        .Where(l => !string.IsNullOrWhiteSpace(l))
+                        .ToList();
+                    playlistFolders[name] = tracks;
+                }
+            }
+            catch { }
+        }
+
+        private static string PromptInput(string title, string prompt, string defaultValue = "")
+        {
+            // simple input dialog using a Form
+            var form = new Form();
+            form.Text = title;
+            form.ClientSize = new Size(350, 120);
+            form.FormBorderStyle = FormBorderStyle.FixedDialog;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form.MaximizeBox = false;
+            form.MinimizeBox = false;
+
+            var lbl = new Label() { Text = prompt, Left = 10, Top = 12, AutoSize = true };
+            var txt = new TextBox() { Left = 10, Top = 38, Width = 320, Text = defaultValue };
+            var btnOk = new Button() { Text = "OK", Left = 170, Top = 75, Width = 75, DialogResult = DialogResult.OK };
+            var btnCancel = new Button() { Text = "Cancel", Left = 255, Top = 75, Width = 75, DialogResult = DialogResult.Cancel };
+
+            form.Controls.AddRange(new Control[] { lbl, txt, btnOk, btnCancel });
+            form.AcceptButton = btnOk;
+            form.CancelButton = btnCancel;
+
+            return form.ShowDialog() == DialogResult.OK ? txt.Text : null;
         }
     }
 }

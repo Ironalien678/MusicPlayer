@@ -1,2 +1,2 @@
 1.1.0.0
-https://github.com/Ironalien678/MusicPlayer/releases
+https://github.com/Ironalien678/MusicPlayer/tree/master/Output

@@ -47,8 +47,15 @@
         private System.Windows.Forms.ToolStripMenuItem clearPlaylistToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addToPlaylistToolStripMenuItem;
         private System.Windows.Forms.Panel panelSeekBg;
         private System.Windows.Forms.Panel panelSeekFill;
+        private System.Windows.Forms.TreeView treePlaylistFolders;
+        private System.Windows.Forms.ContextMenuStrip folderContextMenu;
+        private System.Windows.Forms.ToolStripMenuItem newFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteFolderToolStripMenuItem;
+        private System.Windows.Forms.Label lblFolders;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -90,6 +97,7 @@
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -116,6 +124,13 @@
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.panelSeekBg = new System.Windows.Forms.Panel();
             this.panelSeekFill = new System.Windows.Forms.Panel();
+            this.treePlaylistFolders = new System.Windows.Forms.TreeView();
+            this.folderContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.newFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblFolders = new System.Windows.Forms.Label();
+            this.folderContextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.playlistContextMenu.SuspendLayout();
@@ -224,9 +239,9 @@
             this.lstPlaylist.ContextMenuStrip = this.playlistContextMenu;
             this.lstPlaylist.FormattingEnabled = true;
             this.lstPlaylist.ItemHeight = 23;
-            this.lstPlaylist.Location = new System.Drawing.Point(12, 31);
+            this.lstPlaylist.Location = new System.Drawing.Point(170, 31);
             this.lstPlaylist.Name = "lstPlaylist";
-            this.lstPlaylist.Size = new System.Drawing.Size(360, 464);
+            this.lstPlaylist.Size = new System.Drawing.Size(310, 464);
             this.lstPlaylist.TabIndex = 1;
             this.lstPlaylist.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragDrop);
             this.lstPlaylist.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragEnter);
@@ -239,6 +254,7 @@
             this.removeTrackToolStripMenuItem,
             this.moveUpToolStripMenuItem,
             this.moveDownToolStripMenuItem,
+            this.addToPlaylistToolStripMenuItem,
             this.clearPlaylistToolStripMenuItem});
             this.playlistContextMenu.Name = "playlistContextMenu";
             this.playlistContextMenu.Size = new System.Drawing.Size(163, 100);
@@ -270,6 +286,13 @@
             this.clearPlaylistToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
             this.clearPlaylistToolStripMenuItem.Text = "Clear Playlist";
             this.clearPlaylistToolStripMenuItem.Click += new System.EventHandler(this.clearPlaylistToolStripMenuItem_Click);
+            // 
+            // addToPlaylistToolStripMenuItem
+            // 
+            this.addToPlaylistToolStripMenuItem.Name = "addToPlaylistToolStripMenuItem";
+            this.addToPlaylistToolStripMenuItem.Size = new System.Drawing.Size(199, 24);
+            this.addToPlaylistToolStripMenuItem.Text = "Add to Playlist...";
+            this.addToPlaylistToolStripMenuItem.Click += new System.EventHandler(this.addToPlaylistToolStripMenuItem_Click);
             // 
             // btnPlay
             // 
@@ -396,7 +419,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(12, 537);
+            this.btnSave.Location = new System.Drawing.Point(170, 537);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(175, 30);
             this.btnSave.TabIndex = 13;
@@ -405,7 +428,7 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(197, 537);
+            this.btnLoad.Location = new System.Drawing.Point(330, 537);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(175, 30);
             this.btnLoad.TabIndex = 14;
@@ -479,9 +502,9 @@
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Gray;
-            this.txtSearch.Location = new System.Drawing.Point(12, 501);
+            this.txtSearch.Location = new System.Drawing.Point(170, 501);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(360, 30);
+            this.txtSearch.Size = new System.Drawing.Size(310, 30);
             this.txtSearch.TabIndex = 21;
             this.txtSearch.Text = "Search playlist...";
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
@@ -505,11 +528,64 @@
             this.panelSeekFill.Size = new System.Drawing.Size(0, 5);
             this.panelSeekFill.TabIndex = 31;
             // 
+            // lblFolders
+            // 
+            this.lblFolders.AutoSize = true;
+            this.lblFolders.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblFolders.Location = new System.Drawing.Point(12, 32);
+            this.lblFolders.Name = "lblFolders";
+            this.lblFolders.Size = new System.Drawing.Size(60, 20);
+            this.lblFolders.TabIndex = 40;
+            this.lblFolders.Text = "Playlists";
+            // 
+            // treePlaylistFolders
+            // 
+            this.treePlaylistFolders.Location = new System.Drawing.Point(12, 55);
+            this.treePlaylistFolders.Name = "treePlaylistFolders";
+            this.treePlaylistFolders.Size = new System.Drawing.Size(150, 440);
+            this.treePlaylistFolders.TabIndex = 41;
+            this.treePlaylistFolders.ContextMenuStrip = this.folderContextMenu;
+            this.treePlaylistFolders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treePlaylistFolders_AfterSelect);
+            this.treePlaylistFolders.HideSelection = false;
+            // 
+            // folderContextMenu
+            // 
+            this.folderContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.folderContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newFolderToolStripMenuItem,
+            this.renameFolderToolStripMenuItem,
+            this.deleteFolderToolStripMenuItem});
+            this.folderContextMenu.Name = "folderContextMenu";
+            this.folderContextMenu.Size = new System.Drawing.Size(180, 76);
+            // 
+            // newFolderToolStripMenuItem
+            // 
+            this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.newFolderToolStripMenuItem.Text = "New Playlist";
+            this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
+            // 
+            // renameFolderToolStripMenuItem
+            // 
+            this.renameFolderToolStripMenuItem.Name = "renameFolderToolStripMenuItem";
+            this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.renameFolderToolStripMenuItem.Text = "Rename";
+            this.renameFolderToolStripMenuItem.Click += new System.EventHandler(this.renameFolderToolStripMenuItem_Click);
+            // 
+            // deleteFolderToolStripMenuItem
+            // 
+            this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
+            this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.deleteFolderToolStripMenuItem.Text = "Delete";
+            this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(945, 599);
+            this.ClientSize = new System.Drawing.Size(1100, 599);
+            this.Controls.Add(this.lblFolders);
+            this.Controls.Add(this.treePlaylistFolders);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.lblArtist);
             this.Controls.Add(this.lblAlbum);
@@ -552,6 +628,7 @@
             this.panelWmp.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picAlbumArt)).EndInit();
             this.panelSeekBg.ResumeLayout(false);
+            this.folderContextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
