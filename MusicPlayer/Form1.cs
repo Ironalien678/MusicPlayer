@@ -66,13 +66,47 @@ namespace MusicPlayer
             // check for updates silently on startup
             System.Threading.Tasks.Task.Run(() =>
             {
-                try { UpdateChecker.Check(silent: true); } catch { }
+                try
+                {
+                    System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
+                    string response;
+                    using (var wc = new System.Net.WebClient())
+                    {
+                        wc.Headers.Add("User-Agent", "MusicPlayer-UpdateChecker");
+                        response = wc.DownloadString("https://raw.githubusercontent.com/Ironalien678/MusicPlayer/master/version.txt");
+                    }
+                    if (string.IsNullOrWhiteSpace(response)) return;
+                    var lines = response.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Length < 2) return;
+                    Version latestVersion;
+                    if (!Version.TryParse(lines[0].Trim(), out latestVersion)) return;
+                    var currentVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                    if (latestVersion > currentVersion)
+                    {
+                        this.BeginInvoke((Action)(() =>
+                        {
+                            var result = MessageBox.Show(this,
+                                "A new version (" + latestVersion + ") is available!\nYou are running version " + currentVersion + ".\n\nWould you like to download the update?",
+                                "Update Available", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                            if (result == DialogResult.Yes)
+                                System.Diagnostics.Process.Start(lines[1].Trim());
+                        }));
+                    }
+                }
+                catch { }
             });
         }
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            UpdateChecker.Check(silent: false);
+            try
+            {
+                UpdateChecker.Check(silent: false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not check for updates:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void lstPlaylist_DoubleClick(object sender, EventArgs e)

@@ -30,6 +30,9 @@ namespace MusicPlayer
         {
             try
             {
+                // GitHub requires TLS 1.2
+                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+
                 string response;
                 using (var wc = new WebClient())
                 {
