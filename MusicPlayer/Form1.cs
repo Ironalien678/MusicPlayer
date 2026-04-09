@@ -85,6 +85,9 @@ namespace MusicPlayer
             // autoplay: start playing the first added track if nothing was playing
             if (wasEmpty && playlist.Count > 0 && currentIndex < 0)
                 PlayAt(0);
+            // keep master list in sync
+            if (activeFolder == null)
+                fullPlaylist = new List<string>(playlist);
         }
 
         private void addFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -115,6 +118,9 @@ namespace MusicPlayer
                     // autoplay if nothing was playing
                     if (wasEmpty && playlist.Count > 0 && currentIndex < 0)
                         PlayAt(0);
+                    // keep master list in sync
+                    if (activeFolder == null)
+                        fullPlaylist = new List<string>(playlist);
                 }
                 catch (Exception ex)
                 {
@@ -278,6 +284,7 @@ namespace MusicPlayer
         private void PlayNext()
         {
             if (playlist.Count == 0) return;
+            if (currentIndex < 0) currentIndex = 0;
             if (repeatEnabled)
             {
                 PlayAt(currentIndex);
@@ -317,8 +324,12 @@ namespace MusicPlayer
                 if (wmp == null) return;
                 int state = 0;
                 try { state = (int)wmp.playState; } catch { }
-                // 8 = MediaEnded
-                if (state == 8) { PlayNext(); return; }
+                // 8 = MediaEnded, 1 = Stopped (WMP may go to Stopped instead of MediaEnded)
+                if (state == 8 || (state == 1 && currentIndex >= 0))
+                {
+                    PlayNext();
+                    return;
+                }
 
                 var media = wmp.currentMedia;
                 if (media != null)
@@ -402,6 +413,7 @@ namespace MusicPlayer
                         var lines = System.IO.File.ReadAllLines(ofd.FileName).Where(l => !string.IsNullOrWhiteSpace(l)).ToArray();
                         playlist.Clear(); lstPlaylist.Items.Clear();
                         foreach (var l in lines) { playlist.Add(l); lstPlaylist.Items.Add(System.IO.Path.GetFileName(l)); }
+                        fullPlaylist = new List<string>(playlist);
                         if (playlist.Count > 0) PlayAt(0);
                     }
                     catch (Exception ex) { MessageBox.Show("Failed to load playlist: " + ex.Message); }
@@ -459,6 +471,9 @@ namespace MusicPlayer
                 // autoplay: start playing the first added track if nothing was playing
                 if (wasEmpty && playlist.Count > 0 && currentIndex < 0)
                     PlayAt(0);
+                // keep master list in sync
+                if (activeFolder == null)
+                    fullPlaylist = new List<string>(playlist);
             }
             catch { }
         }
@@ -890,8 +905,9 @@ namespace MusicPlayer
                     shuffleEnabled ? "1" : "0",
                     repeatEnabled ? "1" : "0",
                     currentIndex));
-                // playlist paths
-                foreach (var p in playlist)
+                // playlist paths - save the master list
+                var toSave = activeFolder == null ? playlist : fullPlaylist;
+                foreach (var p in toSave)
                     lines.Add(p);
 
                 System.IO.File.WriteAllLines(SaveFile, lines);
@@ -941,6 +957,9 @@ namespace MusicPlayer
                 }
 
                 UpdateStatusBar();
+
+                // save the loaded playlist as the master "All Music" list
+                fullPlaylist = new List<string>(playlist);
 
                 // restore selection (don't auto-play, just highlight)
                 if (restoredIndex >= 0 && restoredIndex < playlist.Count)
@@ -993,8 +1012,19 @@ namespace MusicPlayer
             if (key == "__ALL__")
             {
                 activeFolder = null;
-                // show all tracks from session
-                // don't change playlist - just leave it as is
+                // restore the master playlist
+                playlist.Clear();
+                lstPlaylist.Items.Clear();
+                currentIndex = -1;
+                foreach (var path in fullPlaylist)
+                {
+                    if (System.IO.File.Exists(path))
+                    {
+                        playlist.Add(path);
+                        lstPlaylist.Items.Add(System.IO.Path.GetFileName(path));
+                    }
+                }
+                UpdateStatusBar();
                 return;
             }
 
