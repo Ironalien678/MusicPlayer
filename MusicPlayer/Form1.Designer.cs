@@ -87,8 +87,8 @@
             this.loadPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.lstPlaylist = new System.Windows.Forms.ListBox();
@@ -96,8 +96,8 @@
             this.removeTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clearPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
@@ -130,7 +130,6 @@
             this.renameFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lblFolders = new System.Windows.Forms.Label();
-            this.folderContextMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.playlistContextMenu.SuspendLayout();
@@ -139,6 +138,7 @@
             this.panelWmp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAlbumArt)).BeginInit();
             this.panelSeekBg.SuspendLayout();
+            this.folderContextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -200,19 +200,19 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(55, 24);
             this.helpToolStripMenuItem.Text = "&Help";
             // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(133, 26);
-            this.aboutToolStripMenuItem.Text = "&About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
             // checkForUpdatesToolStripMenuItem
             // 
             this.checkForUpdatesToolStripMenuItem.Name = "checkForUpdatesToolStripMenuItem";
-            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(210, 26);
+            this.checkForUpdatesToolStripMenuItem.Size = new System.Drawing.Size(222, 26);
             this.checkForUpdatesToolStripMenuItem.Text = "Check for &Updates...";
             this.checkForUpdatesToolStripMenuItem.Click += new System.EventHandler(this.checkForUpdatesToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(222, 26);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -257,46 +257,46 @@
             this.addToPlaylistToolStripMenuItem,
             this.clearPlaylistToolStripMenuItem});
             this.playlistContextMenu.Name = "playlistContextMenu";
-            this.playlistContextMenu.Size = new System.Drawing.Size(163, 100);
+            this.playlistContextMenu.Size = new System.Drawing.Size(184, 124);
             // 
             // removeTrackToolStripMenuItem
             // 
             this.removeTrackToolStripMenuItem.Name = "removeTrackToolStripMenuItem";
-            this.removeTrackToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.removeTrackToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.removeTrackToolStripMenuItem.Text = "Remove";
             this.removeTrackToolStripMenuItem.Click += new System.EventHandler(this.removeTrackToolStripMenuItem_Click);
             // 
             // moveUpToolStripMenuItem
             // 
             this.moveUpToolStripMenuItem.Name = "moveUpToolStripMenuItem";
-            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.moveUpToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.moveUpToolStripMenuItem.Text = "Move Up";
             this.moveUpToolStripMenuItem.Click += new System.EventHandler(this.moveUpToolStripMenuItem_Click);
             // 
             // moveDownToolStripMenuItem
             // 
             this.moveDownToolStripMenuItem.Name = "moveDownToolStripMenuItem";
-            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
+            this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.moveDownToolStripMenuItem.Text = "Move Down";
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
-            // 
-            // clearPlaylistToolStripMenuItem
-            // 
-            this.clearPlaylistToolStripMenuItem.Name = "clearPlaylistToolStripMenuItem";
-            this.clearPlaylistToolStripMenuItem.Size = new System.Drawing.Size(162, 24);
-            this.clearPlaylistToolStripMenuItem.Text = "Clear Playlist";
-            this.clearPlaylistToolStripMenuItem.Click += new System.EventHandler(this.clearPlaylistToolStripMenuItem_Click);
             // 
             // addToPlaylistToolStripMenuItem
             // 
             this.addToPlaylistToolStripMenuItem.Name = "addToPlaylistToolStripMenuItem";
-            this.addToPlaylistToolStripMenuItem.Size = new System.Drawing.Size(199, 24);
+            this.addToPlaylistToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
             this.addToPlaylistToolStripMenuItem.Text = "Add to Playlist...";
             this.addToPlaylistToolStripMenuItem.Click += new System.EventHandler(this.addToPlaylistToolStripMenuItem_Click);
             // 
+            // clearPlaylistToolStripMenuItem
+            // 
+            this.clearPlaylistToolStripMenuItem.Name = "clearPlaylistToolStripMenuItem";
+            this.clearPlaylistToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
+            this.clearPlaylistToolStripMenuItem.Text = "Clear Playlist";
+            this.clearPlaylistToolStripMenuItem.Click += new System.EventHandler(this.clearPlaylistToolStripMenuItem_Click);
+            // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(550, 495);
+            this.btnPlay.Location = new System.Drawing.Point(550, 500);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(50, 34);
             this.btnPlay.TabIndex = 3;
@@ -305,7 +305,7 @@
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(605, 495);
+            this.btnPause.Location = new System.Drawing.Point(604, 500);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(50, 34);
             this.btnPause.TabIndex = 4;
@@ -314,7 +314,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(660, 495);
+            this.btnStop.Location = new System.Drawing.Point(660, 500);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(40, 34);
             this.btnStop.TabIndex = 5;
@@ -323,7 +323,7 @@
             // 
             // btnPrev
             // 
-            this.btnPrev.Location = new System.Drawing.Point(505, 495);
+            this.btnPrev.Location = new System.Drawing.Point(500, 500);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(40, 34);
             this.btnPrev.TabIndex = 6;
@@ -332,7 +332,7 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(705, 495);
+            this.btnNext.Location = new System.Drawing.Point(706, 500);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(40, 34);
             this.btnNext.TabIndex = 7;
@@ -341,10 +341,10 @@
             // 
             // trackVolume
             // 
-            this.trackVolume.Location = new System.Drawing.Point(975, 495);
+            this.trackVolume.Location = new System.Drawing.Point(972, 506);
             this.trackVolume.Maximum = 100;
             this.trackVolume.Name = "trackVolume";
-            this.trackVolume.Size = new System.Drawing.Size(80, 34);
+            this.trackVolume.Size = new System.Drawing.Size(80, 56);
             this.trackVolume.TabIndex = 8;
             this.trackVolume.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackVolume.Value = 50;
@@ -352,10 +352,10 @@
             // 
             // trackPosition
             // 
-            this.trackPosition.Location = new System.Drawing.Point(550, 448);
+            this.trackPosition.Location = new System.Drawing.Point(550, 444);
             this.trackPosition.Maximum = 100;
             this.trackPosition.Name = "trackPosition";
-            this.trackPosition.Size = new System.Drawing.Size(480, 30);
+            this.trackPosition.Size = new System.Drawing.Size(480, 56);
             this.trackPosition.TabIndex = 9;
             this.trackPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackPosition.Scroll += new System.EventHandler(this.trackPosition_Scroll);
@@ -402,7 +402,7 @@
             // lblPosition
             // 
             this.lblPosition.AutoSize = true;
-            this.lblPosition.Location = new System.Drawing.Point(500, 453);
+            this.lblPosition.Location = new System.Drawing.Point(501, 444);
             this.lblPosition.Name = "lblPosition";
             this.lblPosition.Size = new System.Drawing.Size(50, 23);
             this.lblPosition.TabIndex = 11;
@@ -411,7 +411,7 @@
             // lblDuration
             // 
             this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(1035, 453);
+            this.lblDuration.Location = new System.Drawing.Point(1036, 444);
             this.lblDuration.Name = "lblDuration";
             this.lblDuration.Size = new System.Drawing.Size(50, 23);
             this.lblDuration.TabIndex = 12;
@@ -465,7 +465,7 @@
             // 
             // btnShuffle
             // 
-            this.btnShuffle.Location = new System.Drawing.Point(760, 495);
+            this.btnShuffle.Location = new System.Drawing.Point(752, 500);
             this.btnShuffle.Name = "btnShuffle";
             this.btnShuffle.Size = new System.Drawing.Size(70, 34);
             this.btnShuffle.TabIndex = 22;
@@ -474,16 +474,16 @@
             // 
             // btnRepeat
             // 
-            this.btnRepeat.Location = new System.Drawing.Point(835, 495);
+            this.btnRepeat.Location = new System.Drawing.Point(836, 500);
             this.btnRepeat.Name = "btnRepeat";
-            this.btnRepeat.Size = new System.Drawing.Size(70, 34);
+            this.btnRepeat.Size = new System.Drawing.Size(81, 34);
             this.btnRepeat.TabIndex = 23;
             this.btnRepeat.Text = "Repeat";
             this.btnRepeat.Click += new System.EventHandler(this.btnRepeat_Click);
             // 
             // btnMute
             // 
-            this.btnMute.Location = new System.Drawing.Point(940, 495);
+            this.btnMute.Location = new System.Drawing.Point(934, 500);
             this.btnMute.Name = "btnMute";
             this.btnMute.Size = new System.Drawing.Size(35, 34);
             this.btnMute.TabIndex = 24;
@@ -493,7 +493,7 @@
             // lblVolume
             // 
             this.lblVolume.AutoSize = true;
-            this.lblVolume.Location = new System.Drawing.Point(1058, 500);
+            this.lblVolume.Location = new System.Drawing.Point(1046, 506);
             this.lblVolume.Name = "lblVolume";
             this.lblVolume.Size = new System.Drawing.Size(42, 23);
             this.lblVolume.TabIndex = 25;
@@ -504,7 +504,7 @@
             this.txtSearch.ForeColor = System.Drawing.Color.Gray;
             this.txtSearch.Location = new System.Drawing.Point(170, 480);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(310, 28);
+            this.txtSearch.Size = new System.Drawing.Size(310, 30);
             this.txtSearch.TabIndex = 21;
             this.txtSearch.Text = "Search playlist...";
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
@@ -528,25 +528,15 @@
             this.panelSeekFill.Size = new System.Drawing.Size(0, 5);
             this.panelSeekFill.TabIndex = 31;
             // 
-            // lblFolders
-            // 
-            this.lblFolders.AutoSize = true;
-            this.lblFolders.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblFolders.Location = new System.Drawing.Point(12, 32);
-            this.lblFolders.Name = "lblFolders";
-            this.lblFolders.Size = new System.Drawing.Size(60, 20);
-            this.lblFolders.TabIndex = 40;
-            this.lblFolders.Text = "Playlists";
-            // 
             // treePlaylistFolders
             // 
+            this.treePlaylistFolders.ContextMenuStrip = this.folderContextMenu;
+            this.treePlaylistFolders.HideSelection = false;
             this.treePlaylistFolders.Location = new System.Drawing.Point(12, 55);
             this.treePlaylistFolders.Name = "treePlaylistFolders";
             this.treePlaylistFolders.Size = new System.Drawing.Size(150, 490);
             this.treePlaylistFolders.TabIndex = 41;
-            this.treePlaylistFolders.ContextMenuStrip = this.folderContextMenu;
             this.treePlaylistFolders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treePlaylistFolders_AfterSelect);
-            this.treePlaylistFolders.HideSelection = false;
             // 
             // folderContextMenu
             // 
@@ -556,28 +546,38 @@
             this.renameFolderToolStripMenuItem,
             this.deleteFolderToolStripMenuItem});
             this.folderContextMenu.Name = "folderContextMenu";
-            this.folderContextMenu.Size = new System.Drawing.Size(180, 76);
+            this.folderContextMenu.Size = new System.Drawing.Size(159, 76);
             // 
             // newFolderToolStripMenuItem
             // 
             this.newFolderToolStripMenuItem.Name = "newFolderToolStripMenuItem";
-            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.newFolderToolStripMenuItem.Size = new System.Drawing.Size(158, 24);
             this.newFolderToolStripMenuItem.Text = "New Playlist";
             this.newFolderToolStripMenuItem.Click += new System.EventHandler(this.newFolderToolStripMenuItem_Click);
             // 
             // renameFolderToolStripMenuItem
             // 
             this.renameFolderToolStripMenuItem.Name = "renameFolderToolStripMenuItem";
-            this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.renameFolderToolStripMenuItem.Size = new System.Drawing.Size(158, 24);
             this.renameFolderToolStripMenuItem.Text = "Rename";
             this.renameFolderToolStripMenuItem.Click += new System.EventHandler(this.renameFolderToolStripMenuItem_Click);
             // 
             // deleteFolderToolStripMenuItem
             // 
             this.deleteFolderToolStripMenuItem.Name = "deleteFolderToolStripMenuItem";
-            this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(179, 24);
+            this.deleteFolderToolStripMenuItem.Size = new System.Drawing.Size(158, 24);
             this.deleteFolderToolStripMenuItem.Text = "Delete";
             this.deleteFolderToolStripMenuItem.Click += new System.EventHandler(this.deleteFolderToolStripMenuItem_Click);
+            // 
+            // lblFolders
+            // 
+            this.lblFolders.AutoSize = true;
+            this.lblFolders.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblFolders.Location = new System.Drawing.Point(12, 32);
+            this.lblFolders.Name = "lblFolders";
+            this.lblFolders.Size = new System.Drawing.Size(66, 20);
+            this.lblFolders.TabIndex = 40;
+            this.lblFolders.Text = "Playlists";
             // 
             // Form1
             // 
@@ -612,7 +612,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";
