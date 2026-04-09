@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="MusicPlayer/MusicPlayer.csproj" Id="a8a3f198-67af-4340-abbe-9aab98f86977">
+    <BuildType Project="Release" />
+  </Project>
+</Solution>

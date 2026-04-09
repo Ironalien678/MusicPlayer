@@ -1,0 +1,10 @@
+To add TagLibSharp (TagLib) to this project in Visual Studio 2026:
+
+1. In Visual Studio go to Tools -> NuGet Package Manager -> Manage NuGet Packages for Solution.
+2. Browse for "TagLibSharp" (package id: TagLibSharp) and install version 2.x into the MusicPlayer project.
+3. Alternatively, in Package Manager Console run:
+   Install-Package TagLibSharp -Version 2.2.0
+
+After installing, re-open the solution if necessary and add `using TagLib;` at the top of `Form1.cs`.
+
+I did not add the package automatically because editing the .csproj while the solution is open is restricted. Follow the steps above to add TagLibSharp and then you can enable TagLib features in the code.
