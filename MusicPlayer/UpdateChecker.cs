@@ -16,12 +16,12 @@ namespace MusicPlayer
         //      Line 2: download URL for the new installer
         //    Example contents of version.txt:
         //      1.1.0.0
-        //      https://github.com/Ironalien678/MusicPlayer/releases/tag/v1.2
+        //      https://github.com/yourname/MusicPlayer/releases/download/v1.1/MusicPlayerInstaller.exe
         // 3. When you release a new version, update AssemblyVersion in
         //    Properties\AssemblyInfo.cs AND update the hosted version.txt.
         // ---------------------------------------------------------------
 
-        private const string VersionUrl = "https://github.com/Ironalien678/MusicPlayer/blob/master/version.txt";
+        private const string VersionUrl = "https://raw.githubusercontent.com/Ironalien678/MusicPlayer/master/version.txt";
 
         /// <summary>
         /// Check for updates. If silent is true, only show a message when an update is available.
