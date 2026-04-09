@@ -149,7 +149,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(945, 28);
+            this.menuStrip1.Size = new System.Drawing.Size(1100, 28);
             this.menuStrip1.TabIndex = 0;
             // 
             // fileToolStripMenuItem
@@ -219,9 +219,9 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 573);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 548);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(945, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(1100, 26);
             this.statusStrip1.TabIndex = 16;
             // 
             // toolStripStatusLabel1
@@ -241,7 +241,7 @@
             this.lstPlaylist.ItemHeight = 23;
             this.lstPlaylist.Location = new System.Drawing.Point(170, 31);
             this.lstPlaylist.Name = "lstPlaylist";
-            this.lstPlaylist.Size = new System.Drawing.Size(310, 464);
+            this.lstPlaylist.Size = new System.Drawing.Size(310, 441);
             this.lstPlaylist.TabIndex = 1;
             this.lstPlaylist.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragDrop);
             this.lstPlaylist.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragEnter);
@@ -296,7 +296,7 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(435, 501);
+            this.btnPlay.Location = new System.Drawing.Point(550, 495);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(50, 34);
             this.btnPlay.TabIndex = 3;
@@ -305,7 +305,7 @@
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(489, 502);
+            this.btnPause.Location = new System.Drawing.Point(605, 495);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(50, 34);
             this.btnPause.TabIndex = 4;
@@ -314,7 +314,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(545, 502);
+            this.btnStop.Location = new System.Drawing.Point(660, 495);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(40, 34);
             this.btnStop.TabIndex = 5;
@@ -323,7 +323,7 @@
             // 
             // btnPrev
             // 
-            this.btnPrev.Location = new System.Drawing.Point(389, 501);
+            this.btnPrev.Location = new System.Drawing.Point(505, 495);
             this.btnPrev.Name = "btnPrev";
             this.btnPrev.Size = new System.Drawing.Size(40, 34);
             this.btnPrev.TabIndex = 6;
@@ -332,7 +332,7 @@
             // 
             // btnNext
             // 
-            this.btnNext.Location = new System.Drawing.Point(591, 502);
+            this.btnNext.Location = new System.Drawing.Point(705, 495);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(40, 34);
             this.btnNext.TabIndex = 7;
@@ -341,10 +341,10 @@
             // 
             // trackVolume
             // 
-            this.trackVolume.Location = new System.Drawing.Point(837, 506);
+            this.trackVolume.Location = new System.Drawing.Point(975, 495);
             this.trackVolume.Maximum = 100;
             this.trackVolume.Name = "trackVolume";
-            this.trackVolume.Size = new System.Drawing.Size(65, 56);
+            this.trackVolume.Size = new System.Drawing.Size(80, 34);
             this.trackVolume.TabIndex = 8;
             this.trackVolume.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackVolume.Value = 50;
@@ -352,10 +352,10 @@
             // 
             // trackPosition
             // 
-            this.trackPosition.Location = new System.Drawing.Point(435, 445);
+            this.trackPosition.Location = new System.Drawing.Point(550, 448);
             this.trackPosition.Maximum = 100;
             this.trackPosition.Name = "trackPosition";
-            this.trackPosition.Size = new System.Drawing.Size(440, 56);
+            this.trackPosition.Size = new System.Drawing.Size(480, 30);
             this.trackPosition.TabIndex = 9;
             this.trackPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackPosition.Scroll += new System.EventHandler(this.trackPosition_Scroll);
@@ -365,7 +365,7 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Location = new System.Drawing.Point(390, 62);
+            this.lblTitle.Location = new System.Drawing.Point(500, 62);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(51, 23);
             this.lblTitle.TabIndex = 17;
@@ -374,7 +374,7 @@
             // lblArtist
             // 
             this.lblArtist.AutoSize = true;
-            this.lblArtist.Location = new System.Drawing.Point(390, 88);
+            this.lblArtist.Location = new System.Drawing.Point(500, 88);
             this.lblArtist.Name = "lblArtist";
             this.lblArtist.Size = new System.Drawing.Size(59, 23);
             this.lblArtist.TabIndex = 18;
@@ -383,7 +383,7 @@
             // lblAlbum
             // 
             this.lblAlbum.AutoSize = true;
-            this.lblAlbum.Location = new System.Drawing.Point(390, 114);
+            this.lblAlbum.Location = new System.Drawing.Point(500, 114);
             this.lblAlbum.Name = "lblAlbum";
             this.lblAlbum.Size = new System.Drawing.Size(69, 23);
             this.lblAlbum.TabIndex = 19;
@@ -393,7 +393,7 @@
             // 
             this.lblNowPlaying.AutoSize = true;
             this.lblNowPlaying.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.lblNowPlaying.Location = new System.Drawing.Point(390, 35);
+            this.lblNowPlaying.Location = new System.Drawing.Point(500, 35);
             this.lblNowPlaying.Name = "lblNowPlaying";
             this.lblNowPlaying.Size = new System.Drawing.Size(135, 25);
             this.lblNowPlaying.TabIndex = 10;
@@ -402,7 +402,7 @@
             // lblPosition
             // 
             this.lblPosition.AutoSize = true;
-            this.lblPosition.Location = new System.Drawing.Point(390, 445);
+            this.lblPosition.Location = new System.Drawing.Point(500, 453);
             this.lblPosition.Name = "lblPosition";
             this.lblPosition.Size = new System.Drawing.Size(50, 23);
             this.lblPosition.TabIndex = 11;
@@ -411,7 +411,7 @@
             // lblDuration
             // 
             this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(885, 445);
+            this.lblDuration.Location = new System.Drawing.Point(1035, 453);
             this.lblDuration.Name = "lblDuration";
             this.lblDuration.Size = new System.Drawing.Size(50, 23);
             this.lblDuration.TabIndex = 12;
@@ -419,18 +419,18 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(170, 537);
+            this.btnSave.Location = new System.Drawing.Point(170, 515);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(175, 30);
+            this.btnSave.Size = new System.Drawing.Size(150, 30);
             this.btnSave.TabIndex = 13;
             this.btnSave.Text = "Save Playlist";
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(330, 537);
+            this.btnLoad.Location = new System.Drawing.Point(328, 515);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(175, 30);
+            this.btnLoad.Size = new System.Drawing.Size(150, 30);
             this.btnLoad.TabIndex = 14;
             this.btnLoad.Text = "Load Playlist";
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -438,7 +438,7 @@
             // panelWmp
             // 
             this.panelWmp.Controls.Add(this.picAlbumArt);
-            this.panelWmp.Location = new System.Drawing.Point(390, 142);
+            this.panelWmp.Location = new System.Drawing.Point(500, 142);
             this.panelWmp.Name = "panelWmp";
             this.panelWmp.Size = new System.Drawing.Size(290, 290);
             this.panelWmp.TabIndex = 15;
@@ -465,7 +465,7 @@
             // 
             // btnShuffle
             // 
-            this.btnShuffle.Location = new System.Drawing.Point(644, 501);
+            this.btnShuffle.Location = new System.Drawing.Point(760, 495);
             this.btnShuffle.Name = "btnShuffle";
             this.btnShuffle.Size = new System.Drawing.Size(70, 34);
             this.btnShuffle.TabIndex = 22;
@@ -474,7 +474,7 @@
             // 
             // btnRepeat
             // 
-            this.btnRepeat.Location = new System.Drawing.Point(720, 501);
+            this.btnRepeat.Location = new System.Drawing.Point(835, 495);
             this.btnRepeat.Name = "btnRepeat";
             this.btnRepeat.Size = new System.Drawing.Size(70, 34);
             this.btnRepeat.TabIndex = 23;
@@ -483,7 +483,7 @@
             // 
             // btnMute
             // 
-            this.btnMute.Location = new System.Drawing.Point(796, 501);
+            this.btnMute.Location = new System.Drawing.Point(940, 495);
             this.btnMute.Name = "btnMute";
             this.btnMute.Size = new System.Drawing.Size(35, 34);
             this.btnMute.TabIndex = 24;
@@ -493,7 +493,7 @@
             // lblVolume
             // 
             this.lblVolume.AutoSize = true;
-            this.lblVolume.Location = new System.Drawing.Point(893, 507);
+            this.lblVolume.Location = new System.Drawing.Point(1058, 500);
             this.lblVolume.Name = "lblVolume";
             this.lblVolume.Size = new System.Drawing.Size(42, 23);
             this.lblVolume.TabIndex = 25;
@@ -502,9 +502,9 @@
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Gray;
-            this.txtSearch.Location = new System.Drawing.Point(170, 501);
+            this.txtSearch.Location = new System.Drawing.Point(170, 480);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(310, 30);
+            this.txtSearch.Size = new System.Drawing.Size(310, 28);
             this.txtSearch.TabIndex = 21;
             this.txtSearch.Text = "Search playlist...";
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
@@ -515,9 +515,9 @@
             // 
             this.panelSeekBg.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.panelSeekBg.Controls.Add(this.panelSeekFill);
-            this.panelSeekBg.Location = new System.Drawing.Point(445, 468);
+            this.panelSeekBg.Location = new System.Drawing.Point(560, 468);
             this.panelSeekBg.Name = "panelSeekBg";
-            this.panelSeekBg.Size = new System.Drawing.Size(420, 5);
+            this.panelSeekBg.Size = new System.Drawing.Size(460, 5);
             this.panelSeekBg.TabIndex = 30;
             // 
             // panelSeekFill
@@ -542,7 +542,7 @@
             // 
             this.treePlaylistFolders.Location = new System.Drawing.Point(12, 55);
             this.treePlaylistFolders.Name = "treePlaylistFolders";
-            this.treePlaylistFolders.Size = new System.Drawing.Size(150, 440);
+            this.treePlaylistFolders.Size = new System.Drawing.Size(150, 490);
             this.treePlaylistFolders.TabIndex = 41;
             this.treePlaylistFolders.ContextMenuStrip = this.folderContextMenu;
             this.treePlaylistFolders.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treePlaylistFolders_AfterSelect);
@@ -583,7 +583,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 23F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1100, 599);
+            this.ClientSize = new System.Drawing.Size(1100, 574);
             this.Controls.Add(this.lblFolders);
             this.Controls.Add(this.treePlaylistFolders);
             this.Controls.Add(this.lblTitle);
