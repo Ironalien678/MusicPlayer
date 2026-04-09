@@ -241,6 +241,7 @@
             this.lstPlaylist.ItemHeight = 23;
             this.lstPlaylist.Location = new System.Drawing.Point(170, 31);
             this.lstPlaylist.Name = "lstPlaylist";
+            this.lstPlaylist.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.lstPlaylist.Size = new System.Drawing.Size(310, 441);
             this.lstPlaylist.TabIndex = 1;
             this.lstPlaylist.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragDrop);
@@ -263,7 +264,7 @@
             // 
             this.removeTrackToolStripMenuItem.Name = "removeTrackToolStripMenuItem";
             this.removeTrackToolStripMenuItem.Size = new System.Drawing.Size(183, 24);
-            this.removeTrackToolStripMenuItem.Text = "Remove";
+            this.removeTrackToolStripMenuItem.Text = "Remove Selected";
             this.removeTrackToolStripMenuItem.Click += new System.EventHandler(this.removeTrackToolStripMenuItem_Click);
             // 
             // moveUpToolStripMenuItem
@@ -612,7 +613,6 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "Form1";

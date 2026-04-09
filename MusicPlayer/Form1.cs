@@ -36,6 +36,13 @@ namespace MusicPlayer
         {
             InitializeComponent();
 
+            // set the form icon from the EXE's embedded icon (survives designer regeneration)
+            try
+            {
+                this.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location);
+            }
+            catch { }
+
             // create Windows Media Player COM object via ProgID so no project reference is required
             try
             {
@@ -719,21 +726,35 @@ namespace MusicPlayer
             }
         }
 
-        // --- Context menu: Remove track ---
+        // --- Context menu: Remove track(s) ---
         private void removeTrackToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lstPlaylist.SelectedIndex < 0) return;
-            int idx = lstPlaylist.SelectedIndex;
-            // find actual playlist index by matching name
-            var selectedName = lstPlaylist.Items[idx].ToString();
-            int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
-            if (realIdx >= 0)
+            if (lstPlaylist.SelectedIndices.Count == 0) return;
+
+            // collect selected indices in descending order so removal doesn't shift earlier indices
+            var selectedIndices = new List<int>();
+            foreach (int i in lstPlaylist.SelectedIndices)
+                selectedIndices.Add(i);
+            selectedIndices.Sort();
+            selectedIndices.Reverse();
+
+            foreach (int idx in selectedIndices)
             {
-                playlist.RemoveAt(realIdx);
-                if (currentIndex == realIdx) { currentIndex = -1; }
-                else if (currentIndex > realIdx) { currentIndex--; }
+                var selectedName = lstPlaylist.Items[idx].ToString();
+                int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
+                if (realIdx >= 0)
+                {
+                    playlist.RemoveAt(realIdx);
+                    if (currentIndex == realIdx) { currentIndex = -1; }
+                    else if (currentIndex > realIdx) { currentIndex--; }
+                }
+                lstPlaylist.Items.RemoveAt(idx);
             }
-            lstPlaylist.Items.RemoveAt(idx);
+
+            // keep master list in sync
+            if (activeFolder == null)
+                fullPlaylist = new List<string>(playlist);
+
             UpdateStatusBar();
         }
 
