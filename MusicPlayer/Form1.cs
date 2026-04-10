@@ -16,6 +16,9 @@ namespace MusicPlayer
 {
     public partial class Form1 : Form
     {
+        [DllImport("kernel32.dll")]
+        private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
+
         private dynamic wmp;
         private List<string> playlist = new List<string>();
         private int currentIndex = -1;
@@ -31,6 +34,10 @@ namespace MusicPlayer
         private static readonly string PlaylistFoldersDir = System.IO.Path.Combine(SaveDir, "Playlists");
         private Dictionary<string, List<string>> playlistFolders = new Dictionary<string, List<string>>();
         private string activeFolder = null;
+        private FileSystemWatcher folderWatcher = null;
+        private string watchedFolderPath = null;
+        private static readonly string WatchFile = System.IO.Path.Combine(SaveDir, "watchfolder.txt");
+        private static readonly string[] AudioExtensions = { ".mp3", ".wav", ".wma", ".flac" };
 
         public Form1()
         {
@@ -62,6 +69,9 @@ namespace MusicPlayer
             LoadSession();
             LoadPlaylistFolders();
             RefreshFolderTree();
+
+            // restore watched folder
+            LoadWatchedFolder();
 
             // check for updates silently on startup
             System.Threading.Tasks.Task.Run(() =>
@@ -158,14 +168,41 @@ namespace MusicPlayer
             if (lstPlaylist.SelectedIndex >= 0) PlayAt(lstPlaylist.SelectedIndex);
         }
 
+        private void lstPlaylist_MouseDown(object sender, MouseEventArgs e)
+        {
+            // prevent right-click from clearing multi-selection
+            if (e.Button == MouseButtons.Right)
+            {
+                int idx = lstPlaylist.IndexFromPoint(e.Location);
+                if (idx >= 0 && lstPlaylist.SelectedIndices.Contains(idx))
+                {
+                    // item is already selected — do nothing, keep the multi-selection
+                    return;
+                }
+                // clicked on an unselected item — select just that one
+                if (idx >= 0)
+                {
+                    lstPlaylist.ClearSelected();
+                    lstPlaylist.SelectedIndex = idx;
+                }
+            }
+        }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() != DialogResult.OK) return;
+            if (openFileDialog1.ShowDialog(this) != DialogResult.OK) return;
             bool wasEmpty = playlist.Count == 0;
             foreach (var f in openFileDialog1.FileNames)
             {
                 playlist.Add(f);
                 lstPlaylist.Items.Add(System.IO.Path.GetFileName(f));
+
+                // if viewing a playlist folder, also add to that folder's saved list
+                if (activeFolder != null && playlistFolders.ContainsKey(activeFolder))
+                {
+                    if (!playlistFolders[activeFolder].Any(p => string.Equals(p, f, StringComparison.OrdinalIgnoreCase)))
+                        playlistFolders[activeFolder].Add(f);
+                }
             }
             // autoplay: start playing the first added track if nothing was playing
             if (wasEmpty && playlist.Count > 0 && currentIndex < 0)
@@ -173,6 +210,18 @@ namespace MusicPlayer
             // keep master list in sync
             if (activeFolder == null)
                 fullPlaylist = new List<string>(playlist);
+            else
+            {
+                // also add to master list so "All Music" has them too
+                foreach (var f in openFileDialog1.FileNames)
+                {
+                    if (!fullPlaylist.Any(p => string.Equals(p, f, StringComparison.OrdinalIgnoreCase)))
+                        fullPlaylist.Add(f);
+                }
+                SavePlaylistFolders();
+                RefreshFolderTree();
+            }
+            UpdateStatusBar();
         }
 
         private void addFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -619,8 +668,10 @@ namespace MusicPlayer
                                 if (bytes != null)
                                 {
                                     using (var ms = new MemoryStream(bytes))
+                                    using (var img = Image.FromStream(ms))
                                     {
-                                        picAlbumArt.Image = Image.FromStream(ms);
+                                        DisposeAlbumArt();
+                                        picAlbumArt.Image = new Bitmap(img, Math.Min(img.Width, 290), Math.Min(img.Height, 290));
                                     }
                                     return;
                                 }
@@ -638,7 +689,7 @@ namespace MusicPlayer
         {
             try
             {
-                picAlbumArt.Image = null;
+                DisposeAlbumArt();
                 var ext = System.IO.Path.GetExtension(path).ToLowerInvariant();
                 if (ext == ".mp3")
                 {
@@ -647,9 +698,10 @@ namespace MusicPlayer
                     if (tag != null)
                     {
                         using (var ms = new System.IO.MemoryStream(tag))
+                        using (var img = Image.FromStream(ms))
                         {
-                            var img = Image.FromStream(ms);
-                            picAlbumArt.Image = new Bitmap(img);
+                            // downscale to 290x290 max to save memory
+                            picAlbumArt.Image = new Bitmap(img, Math.Min(img.Width, 290), Math.Min(img.Height, 290));
                         }
                         return;
                     }
@@ -662,12 +714,23 @@ namespace MusicPlayer
                     var p = System.IO.Path.Combine(dir, name);
                     if (System.IO.File.Exists(p))
                     {
-                        picAlbumArt.Image = Image.FromFile(p);
+                        using (var fs = new FileStream(p, FileMode.Open, FileAccess.Read))
+                        using (var img = Image.FromStream(fs))
+                        {
+                            picAlbumArt.Image = new Bitmap(img, Math.Min(img.Width, 290), Math.Min(img.Height, 290));
+                        }
                         return;
                     }
                 }
             }
-            catch { picAlbumArt.Image = null; }
+            catch { DisposeAlbumArt(); }
+        }
+
+        private void DisposeAlbumArt()
+        {
+            var old = picAlbumArt.Image;
+            picAlbumArt.Image = null;
+            if (old != null) old.Dispose();
         }
 
         // Very small ID3v2 APIC extractor: returns raw image bytes or null
@@ -846,7 +909,7 @@ namespace MusicPlayer
             lblTitle.Text = "Title: ";
             lblArtist.Text = "Artist: ";
             lblAlbum.Text = "Album: ";
-            picAlbumArt.Image = null;
+            DisposeAlbumArt();
             try { if (wmp != null) wmp.controls.stop(); } catch { }
             timer1.Stop();
             UpdateStatusBar();
@@ -895,10 +958,9 @@ namespace MusicPlayer
             var selectedPaths = new List<string>();
             foreach (int idx in lstPlaylist.SelectedIndices)
             {
-                var selectedName = lstPlaylist.Items[idx].ToString();
-                int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
-                if (realIdx >= 0)
-                    selectedPaths.Add(playlist[realIdx]);
+                // if no search filter is active, listbox index matches playlist index directly
+                if (idx < playlist.Count)
+                    selectedPaths.Add(playlist[idx]);
             }
             if (selectedPaths.Count == 0) return;
 
@@ -935,7 +997,7 @@ namespace MusicPlayer
                 int added = 0;
                 foreach (var trackPath in selectedPaths)
                 {
-                    if (!playlistFolders[folder].Contains(trackPath))
+                    if (!playlistFolders[folder].Any(p => string.Equals(p, trackPath, StringComparison.OrdinalIgnoreCase)))
                     {
                         playlistFolders[folder].Add(trackPath);
                         added++;
@@ -945,6 +1007,7 @@ namespace MusicPlayer
                 {
                     SavePlaylistFolders();
                     RefreshFolderTree();
+                    MessageBox.Show("Added " + added + " track(s) to \"" + folder + "\".", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -1093,6 +1156,8 @@ namespace MusicPlayer
         {
             SaveSession();
             SavePlaylistFolders();
+            DisposeAlbumArt();
+            if (folderWatcher != null) { folderWatcher.EnableRaisingEvents = false; folderWatcher.Dispose(); }
             try { if (wmp != null) wmp.controls.stop(); } catch { }
             base.OnFormClosing(e);
         }
@@ -1139,6 +1204,7 @@ namespace MusicPlayer
                     }
                 }
                 UpdateStatusBar();
+                TrimMemory();
                 return;
             }
 
@@ -1159,6 +1225,7 @@ namespace MusicPlayer
                 }
             }
             UpdateStatusBar();
+            TrimMemory();
         }
 
         private void newFolderToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1270,6 +1337,168 @@ namespace MusicPlayer
             form.CancelButton = btnCancel;
 
             return form.ShowDialog() == DialogResult.OK ? txt.Text : null;
+        }
+
+        // ===================== Memory Management =====================
+
+        private void TrimMemory()
+        {
+            try
+            {
+                GC.Collect(2, GCCollectionMode.Optimized);
+                GC.WaitForPendingFinalizers();
+                SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, -1, -1);
+            }
+            catch { }
+        }
+
+        // ===================== Watch Folder =====================
+
+        private void watchFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.Description = "Select a folder to watch for new music files";
+                fbd.ShowNewFolderButton = false;
+                if (fbd.ShowDialog() != DialogResult.OK) return;
+
+                StartWatching(fbd.SelectedPath);
+                SaveWatchedFolder();
+
+                // scan existing files in the folder and add any that aren't already in the playlist
+                ScanWatchedFolder();
+            }
+        }
+
+        private void stopWatchingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            StopWatching();
+            SaveWatchedFolder();
+        }
+
+        private void StartWatching(string folderPath)
+        {
+            StopWatching();
+
+            watchedFolderPath = folderPath;
+
+            folderWatcher = new FileSystemWatcher();
+            folderWatcher.Path = folderPath;
+            folderWatcher.Filter = "*.*";
+            folderWatcher.IncludeSubdirectories = true;
+            folderWatcher.NotifyFilter = NotifyFilters.FileName;
+            folderWatcher.Created += OnWatchedFileCreated;
+            folderWatcher.Renamed += OnWatchedFileRenamed;
+            folderWatcher.EnableRaisingEvents = true;
+
+            watchFolderToolStripMenuItem.Text = "&Watch Folder (" + System.IO.Path.GetFileName(folderPath) + ")";
+            stopWatchingToolStripMenuItem.Enabled = true;
+        }
+
+        private void StopWatching()
+        {
+            if (folderWatcher != null)
+            {
+                folderWatcher.EnableRaisingEvents = false;
+                folderWatcher.Dispose();
+                folderWatcher = null;
+            }
+            watchedFolderPath = null;
+            watchFolderToolStripMenuItem.Text = "&Watch Folder...";
+            stopWatchingToolStripMenuItem.Enabled = false;
+        }
+
+        private void OnWatchedFileCreated(object sender, FileSystemEventArgs e)
+        {
+            AddWatchedFile(e.FullPath);
+        }
+
+        private void OnWatchedFileRenamed(object sender, RenamedEventArgs e)
+        {
+            AddWatchedFile(e.FullPath);
+        }
+
+        private void AddWatchedFile(string filePath)
+        {
+            try
+            {
+                var ext = System.IO.Path.GetExtension(filePath).ToLowerInvariant();
+                if (!AudioExtensions.Contains(ext)) return;
+                if (playlist.Contains(filePath)) return;
+
+                // marshal to UI thread
+                this.BeginInvoke((Action)(() =>
+                {
+                    if (playlist.Contains(filePath)) return;
+                    playlist.Add(filePath);
+                    lstPlaylist.Items.Add(System.IO.Path.GetFileName(filePath));
+                    if (activeFolder == null)
+                        fullPlaylist = new List<string>(playlist);
+                    UpdateStatusBar();
+                }));
+            }
+            catch { }
+        }
+
+        private void ScanWatchedFolder()
+        {
+            if (string.IsNullOrEmpty(watchedFolderPath) || !System.IO.Directory.Exists(watchedFolderPath)) return;
+
+            try
+            {
+                var files = System.IO.Directory.GetFiles(watchedFolderPath, "*.*", SearchOption.AllDirectories)
+                    .Where(f => AudioExtensions.Contains(System.IO.Path.GetExtension(f).ToLowerInvariant()))
+                    .OrderBy(f => f)
+                    .ToArray();
+
+                int added = 0;
+                foreach (var f in files)
+                {
+                    if (!playlist.Contains(f))
+                    {
+                        playlist.Add(f);
+                        lstPlaylist.Items.Add(System.IO.Path.GetFileName(f));
+                        added++;
+                    }
+                }
+
+                if (added > 0)
+                {
+                    if (activeFolder == null)
+                        fullPlaylist = new List<string>(playlist);
+                    UpdateStatusBar();
+                }
+            }
+            catch { }
+        }
+
+        private void SaveWatchedFolder()
+        {
+            try
+            {
+                if (!System.IO.Directory.Exists(SaveDir))
+                    System.IO.Directory.CreateDirectory(SaveDir);
+
+                if (string.IsNullOrEmpty(watchedFolderPath))
+                    System.IO.File.Delete(WatchFile);
+                else
+                    System.IO.File.WriteAllText(WatchFile, watchedFolderPath);
+            }
+            catch { }
+        }
+
+        private void LoadWatchedFolder()
+        {
+            try
+            {
+                if (!System.IO.File.Exists(WatchFile)) return;
+                var path = System.IO.File.ReadAllText(WatchFile).Trim();
+                if (string.IsNullOrEmpty(path) || !System.IO.Directory.Exists(path)) return;
+
+                StartWatching(path);
+                ScanWatchedFolder();
+            }
+            catch { }
         }
     }
 }

@@ -11,6 +11,8 @@
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addFolderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loadPlaylistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem watchFolderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stopWatchingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
@@ -86,6 +88,8 @@
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadPlaylistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.watchFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopWatchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.checkForUpdatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -160,6 +164,8 @@
             this.addToolStripMenuItem,
             this.addFolderToolStripMenuItem,
             this.loadPlaylistToolStripMenuItem,
+            this.watchFolderToolStripMenuItem,
+            this.stopWatchingToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
@@ -185,6 +191,21 @@
             this.loadPlaylistToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
             this.loadPlaylistToolStripMenuItem.Text = "&Load Playlist...";
             this.loadPlaylistToolStripMenuItem.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
+            // watchFolderToolStripMenuItem
+            // 
+            this.watchFolderToolStripMenuItem.Name = "watchFolderToolStripMenuItem";
+            this.watchFolderToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.watchFolderToolStripMenuItem.Text = "&Watch Folder...";
+            this.watchFolderToolStripMenuItem.Click += new System.EventHandler(this.watchFolderToolStripMenuItem_Click);
+            // 
+            // stopWatchingToolStripMenuItem
+            // 
+            this.stopWatchingToolStripMenuItem.Name = "stopWatchingToolStripMenuItem";
+            this.stopWatchingToolStripMenuItem.Size = new System.Drawing.Size(184, 26);
+            this.stopWatchingToolStripMenuItem.Text = "S&top Watching";
+            this.stopWatchingToolStripMenuItem.Enabled = false;
+            this.stopWatchingToolStripMenuItem.Click += new System.EventHandler(this.stopWatchingToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
@@ -256,6 +277,7 @@
             this.lstPlaylist.TabIndex = 1;
             this.lstPlaylist.DragDrop += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragDrop);
             this.lstPlaylist.DragEnter += new System.Windows.Forms.DragEventHandler(this.lstPlaylist_DragEnter);
+            this.lstPlaylist.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lstPlaylist_MouseDown);
             this.lstPlaylist.DoubleClick += new System.EventHandler(this.lstPlaylist_DoubleClick);
             // 
             // playlistContextMenu
