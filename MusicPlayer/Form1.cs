@@ -889,11 +889,18 @@ namespace MusicPlayer
         // --- Context menu: Add to Playlist folder ---
         private void addToPlaylistToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (lstPlaylist.SelectedIndex < 0) return;
-            var selectedName = lstPlaylist.Items[lstPlaylist.SelectedIndex].ToString();
-            int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
-            if (realIdx < 0) return;
-            var trackPath = playlist[realIdx];
+            if (lstPlaylist.SelectedIndices.Count == 0) return;
+
+            // collect all selected track paths
+            var selectedPaths = new List<string>();
+            foreach (int idx in lstPlaylist.SelectedIndices)
+            {
+                var selectedName = lstPlaylist.Items[idx].ToString();
+                int realIdx = playlist.FindIndex(p => System.IO.Path.GetFileName(p) == selectedName);
+                if (realIdx >= 0)
+                    selectedPaths.Add(playlist[realIdx]);
+            }
+            if (selectedPaths.Count == 0) return;
 
             if (playlistFolders.Count == 0)
             {
@@ -911,7 +918,7 @@ namespace MusicPlayer
             form.MaximizeBox = false;
             form.MinimizeBox = false;
 
-            var lbl = new Label() { Text = "Select playlist:", Left = 10, Top = 12, AutoSize = true };
+            var lbl = new Label() { Text = "Add " + selectedPaths.Count + " track(s) to:", Left = 10, Top = 12, AutoSize = true };
             var combo = new ComboBox() { Left = 10, Top = 38, Width = 270, DropDownStyle = ComboBoxStyle.DropDownList };
             combo.Items.AddRange(folderNames);
             combo.SelectedIndex = 0;
@@ -925,9 +932,17 @@ namespace MusicPlayer
             if (form.ShowDialog() == DialogResult.OK && combo.SelectedItem != null)
             {
                 var folder = combo.SelectedItem.ToString();
-                if (!playlistFolders[folder].Contains(trackPath))
+                int added = 0;
+                foreach (var trackPath in selectedPaths)
                 {
-                    playlistFolders[folder].Add(trackPath);
+                    if (!playlistFolders[folder].Contains(trackPath))
+                    {
+                        playlistFolders[folder].Add(trackPath);
+                        added++;
+                    }
+                }
+                if (added > 0)
+                {
                     SavePlaylistFolders();
                     RefreshFolderTree();
                 }
